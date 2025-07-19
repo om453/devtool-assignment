@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Remove global centering and background styles to let Tailwind control layout */
+
+/* Optionally, keep minimal resets for font smoothing and box-sizing */
+html {
+  box-sizing: border-box;
+}
+*, *::before, *::after {
+  box-sizing: inherit;
+}
