@@ -4,9 +4,9 @@ import bodyParser from 'body-parser';
 
 const app = express();
 
-// Configure CORS for production
+// Configure CORS for production - allow all origins for now
 const corsOptions = {
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  origin: true, // Allow all origins
   credentials: true,
   optionsSuccessStatus: 200
 };
@@ -77,7 +77,12 @@ app.get('/health', (req, res) => {
   res.json({ success: true, message: 'Server is running' });
 });
 
-// Vercel serverless function handler
+// Vercel serverless function handler with error handling
 export default function handler(req, res) {
-  return app(req, res);
+  try {
+    return app(req, res);
+  } catch (error) {
+    console.error('Server error:', error);
+    res.status(500).json({ success: false, error: 'Internal server error' });
+  }
 } 
