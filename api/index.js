@@ -3,7 +3,6 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 
 const app = express();
-const PORT = process.env.PORT || 5000;
 
 // Configure CORS for production
 const corsOptions = {
@@ -20,7 +19,7 @@ let jsonHistory = [];
 let historyId = 1;
 
 // API Routes
-app.post('/api/format-Json', async (req, res) => {
+app.post('/format-Json', async (req, res) => {
   const { json } = req.body;
   try {
     const parsed = JSON.parse(json);
@@ -46,7 +45,7 @@ app.post('/api/format-Json', async (req, res) => {
   }
 });
 
-app.post('/api/encode', (req, res) => {
+app.post('/encode', (req, res) => {
   const { text } = req.body;
   if (typeof text !== 'string') {
     return res.status(400).json({ success: false, error: 'Text is required' });
@@ -55,7 +54,7 @@ app.post('/api/encode', (req, res) => {
   res.json({ success: true, result: encoded });
 });
 
-app.post('/api/decode', (req, res) => {
+app.post('/decode', (req, res) => {
   const { base64 } = req.body;
   try {
     const decoded = Buffer.from(base64, 'base64').toString('utf-8');
@@ -65,7 +64,7 @@ app.post('/api/decode', (req, res) => {
   }
 });
 
-app.get('/api/json-history', async (req, res) => {
+app.get('/json-history', async (req, res) => {
   try {
     res.json({ success: true, history: jsonHistory });
   } catch (err) {
@@ -74,16 +73,11 @@ app.get('/api/json-history', async (req, res) => {
 });
 
 // Health check endpoint
-app.get('/api/health', (req, res) => {
+app.get('/health', (req, res) => {
   res.json({ success: true, message: 'Server is running' });
 });
 
-// For local development
-if (process.env.NODE_ENV !== 'production') {
-  app.listen(PORT, () => {
-    console.log(`Dev Toolbox backend running on port ${PORT}`);
-  });
-}
-
-// For Vercel deployment
-export default app; 
+// Vercel serverless function handler
+export default function handler(req, res) {
+  return app(req, res);
+} 
