@@ -72,7 +72,8 @@ function JsonFormatter() {
     setOutput('');
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:5000/format-Json', {
+      const apiUrl = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? '' : 'http://localhost:5000');
+      const res = await fetch(`${apiUrl}/api/format-Json`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ json: input }),
@@ -161,7 +162,8 @@ function Base64Tool() {
     try {
       const endpoint = mode === 'encode' ? 'encode' : 'decode';
       const body = mode === 'encode' ? { text: input } : { base64: input };
-      const res = await fetch(`http://localhost:5000/${endpoint}`, {
+      const apiUrl = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? '' : 'http://localhost:5000');
+      const res = await fetch(`${apiUrl}/api/${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
@@ -282,7 +284,8 @@ function JsonHistory() {
     setLoading(true);
     setError('');
     try {
-      const res = await fetch('http://localhost:5000/json-history');
+      const apiUrl = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? '' : 'http://localhost:5000');
+      const res = await fetch(`${apiUrl}/api/json-history`);
       const data = await res.json();
       if (data.success) {
         setHistory(data.history);
